@@ -17,10 +17,13 @@ import se.xfunserver.xplaychunks.database.mysql.MySQLDataHandler;
 import se.xfunserver.xplaychunks.event.PlayerConnectionHandler;
 import se.xfunserver.xplaychunks.event.PlayerMovementHandler;
 import se.xfunserver.xplaychunks.event.WorldProfileEventHandler;
+import se.xfunserver.xplaychunks.messages.V2JsonMessages;
 import se.xfunserver.xplaychunks.player.AdminOverride;
 import se.xfunserver.xplaychunks.player.PlayerHandler;
+import se.xfunserver.xplaychunks.rank.RankHandler;
 import se.xfunserver.xplaychunks.worldguard.WorldGuardHandler;
 
+import java.io.File;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.function.Supplier;
@@ -33,16 +36,18 @@ public final class xPlayChunks extends JavaPlugin {
     private IClaimChunkDataHandler dataHandler;
 
     private boolean useEconomy = false;
+    private V2JsonMessages messages;
     private Econ economy;
 
     private ChunkHandler chunkHandler;
     private PlayerHandler playerHandler;
+    private RankHandler rankHandler;
     private WorldGuardHandler worldGuardHandler;
 
     private MainHandler mainHandler;
     @Getter private ChunkOutlineHandler chunkOutlineHandler;
 
-    @Getter private final CommandManager commandManager = new CommandManager();
+    @Getter private final CommandManager commandManager = new CommandManager(this);
     @Getter private final AdminOverride adminOverride = new AdminOverride();;
 
     @Override
@@ -73,8 +78,15 @@ public final class xPlayChunks extends JavaPlugin {
 
         economy = new Econ();
 
+        rankHandler =
+                new RankHandler(
+                        new File(getDataFolder(), "/ranks.json"),
+                        new File(getDataFolder(), "/data/ranks.json"),
+                        this);
+
         this.setupEvents();
         this.initEconomy();
+        this.initMessages();
 
         chunkHandler = new ChunkHandler(dataHandler, this);
         playerHandler = new PlayerHandler(dataHandler, this);
@@ -89,6 +101,16 @@ public final class xPlayChunks extends JavaPlugin {
 
             this.disable();
         }
+
+        try {
+            rankHandler.readFromDisk();
+        } catch (Exception e) {
+            this.getLogger().severe("Failed to load ranks! No ranks will be loaded. Here is the error for reference.");
+            e.printStackTrace();
+
+            this.disable();
+        }
+
 
         Particle particle;
         try {
@@ -159,6 +181,15 @@ public final class xPlayChunks extends JavaPlugin {
         this.getLogger().info("Economy blev inte startad.");
     }
 
+    private void initMessages() {
+        try {
+            // Try to load the messages json file
+            messages = V2JsonMessages.load(new File(getDataFolder(), "/messages.json"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void setupEvents() {
         // Register all the event handlers
         this.getServer().getPluginManager().registerEvents(new WorldProfileEventHandler(this), this);
@@ -210,6 +241,10 @@ public final class xPlayChunks extends JavaPlugin {
         return chunkOutlineHandler;
     }
 
+    public V2JsonMessages getMessages() {
+        return messages;
+    }
+
     public WorldGuardHandler getWorldGuardHandler() {
         return worldGuardHandler;
     }
@@ -224,6 +259,10 @@ public final class xPlayChunks extends JavaPlugin {
 
     private void disable() {
         this.getServer().getPluginManager().disablePlugin(this);
+    }
+
+    public RankHandler getRankHandler() {
+        return rankHandler;
     }
 
     public ChunkHandler getChunkHandler() {

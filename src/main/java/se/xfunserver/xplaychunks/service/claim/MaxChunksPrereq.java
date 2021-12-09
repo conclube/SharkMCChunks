@@ -1,7 +1,6 @@
 package se.xfunserver.xplaychunks.service.claim;
 
 import org.jetbrains.annotations.NotNull;
-import se.xfunserver.xplaychunks.utils.Messages;
 
 import java.util.Optional;
 
@@ -19,6 +18,6 @@ public final class MaxChunksPrereq implements IClaimPrereq {
 
     @Override
     public Optional<String> getErrorMessage(@NotNull PrereqClaimData data) {
-        return Optional.of(Messages.REACHED_MAX_CHUNKS.getMessage());
+        return Optional.of(data.chunksCore.getMessages().claimTooMany);
     }
 }

@@ -1,7 +1,6 @@
 package se.xfunserver.xplaychunks.service.claim;
 
 import org.jetbrains.annotations.NotNull;
-import se.xfunserver.xplaychunks.utils.Messages;
 import se.xfunserver.xplaychunks.worldguard.WorldGuardHandler;
 
 import java.util.Optional;
@@ -23,6 +22,6 @@ public class WorldGuardPrereq implements IClaimPrereq {
 
     @Override
     public Optional<String> getErrorMessage(@NotNull PrereqClaimData data) {
-        return Optional.of(Messages.CLAIMED_DENY.getMessage());
+        return Optional.of(data.chunksCore.getMessages().claimAlreadyOwned);
     }
 }

@@ -8,7 +8,6 @@ import se.xfunserver.xplaychunks.chunks.ChunkHandler;
 import se.xfunserver.xplaychunks.chunks.ChunkPos;
 import se.xfunserver.xplaychunks.command.Command;
 import se.xfunserver.xplaychunks.player.PlayerHandler;
-import se.xfunserver.xplaychunks.utils.Messages;
 import se.xfunserver.xplaychunks.xPlayChunks;
 
 import java.util.UUID;
@@ -37,7 +36,7 @@ public class ListCommand {
             try {
                 page = Utils.ClampValue(Integer.parseInt(args[0]) - 1, 0, maxPage);
             } catch (Exception ignored) {
-                sender.sendMessage(Messages.HAS_TO_BE_NUMBER.getMessage());
+                sender.sendMessage(chunksCore.getMessages().errEnterValidNum);
                 return;
             }
         }

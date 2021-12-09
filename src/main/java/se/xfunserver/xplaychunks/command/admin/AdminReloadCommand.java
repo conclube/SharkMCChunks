@@ -2,7 +2,6 @@ package se.xfunserver.xplaychunks.command.admin;
 
 import org.bukkit.command.CommandSender;
 import se.xfunserver.xplaychunks.command.Command;
-import se.xfunserver.xplaychunks.utils.Messages;
 import se.xfunserver.xplaychunks.utils.StringUtils;
 import se.xfunserver.xplaychunks.xPlayChunks;
 

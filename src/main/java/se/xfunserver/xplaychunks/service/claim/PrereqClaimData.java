@@ -32,7 +32,7 @@ public final class PrereqClaimData {
         this.player = player;
 
         this.claimedBefore = chunksCore.getChunkHandler().getClaimed(playerId);
-        this.maxClaimed = 10;
+        this.maxClaimed = chunksCore.getRankHandler().getMaxClaimsForPlayer(player);
         this.freeClaims = 1;
     }
 }

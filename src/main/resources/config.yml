@@ -17,7 +17,7 @@ economy:
   firstFreeChunks: 1
 
 chunks:
-  maxChunksClaimed: 50
+  maxChunksClaimed: 10
   particlesWhenClaiming: true
   displayNameOfOwner: true
   maxPerListPage: 5

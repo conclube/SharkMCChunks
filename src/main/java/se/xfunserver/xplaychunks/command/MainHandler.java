@@ -9,7 +9,6 @@ import se.xfunserver.xplaychunks.chunks.ChunkHandler;
 import se.xfunserver.xplaychunks.chunks.ChunkPos;
 import se.xfunserver.xplaychunks.service.PrereqChecker;
 import se.xfunserver.xplaychunks.service.claim.*;
-import se.xfunserver.xplaychunks.utils.Messages;
 import se.xfunserver.xplaychunks.utils.PluginSettings;
 import se.xfunserver.xplaychunks.utils.StringUtils;
 import se.xfunserver.xplaychunks.xPlayChunks;
@@ -51,17 +50,17 @@ public final class MainHandler {
 
         PREREQ.check(
                 new PrereqClaimData(XPLAY_CHUNKS, location, player.getUniqueId(), player),
-                Messages.CLAIMED_CHUNK.getMessage()
+                chunksCore.getMessages().claimSuccess
                         .replace("%chunkid%", String.format("%s, %s", location.getX(), location.getZ()))
                         .replace("%price%", String.valueOf(PluginSettings.getChunkPrice())),
-                errorMsg -> errorMsg.ifPresent(player::sendMessage),
+                errorMsg -> errorMsg.ifPresent(msg -> StringUtils.msg(player, msg)),
                 successMsg -> {
                     // Claim the chunk if nothing is wrong
                     ChunkPos pos =
                             CHUNK_HANDLE.claimChunk(
                                     location.getWorld(), location.getX(), location.getZ(), player.getUniqueId());
 
-                    successMsg.ifPresent(player::sendMessage);
+                    successMsg.ifPresent(msg -> StringUtils.msg(player, msg));
 
                     // Error check, though it *shouldn't* occur.
                     if (pos == null) {
@@ -80,6 +79,8 @@ public final class MainHandler {
         ChunkHandler chunkHandler = chunksCore.getChunkHandler();
         Chunk chunk = exeuctor.getLocation().getChunk();
 
+        /*
+
         if (chunkHandler.isOwner(chunk, exeuctor)) {
             exeuctor.sendMessage(
                     (chunkHandler.toggleTnt(chunk)
@@ -89,6 +90,8 @@ public final class MainHandler {
         }
 
         exeuctor.sendMessage(Messages.CLAIMED_DENY.getMessage());
+
+         */
     }
 
     public boolean unclaimChunk(
@@ -104,13 +107,13 @@ public final class MainHandler {
             }
 
             if (!chunkHandler.isClaimed(w, x, z)) {
-                player.sendMessage(Messages.NOT_OWNER.getMessage());
+                StringUtils.msg(player, chunksCore.getMessages().unclaimNotOwned);
                 return false;
             }
 
             // Check if the unclaiming player is the owner or admin override is enabled.
             if (!adminOverride && !chunkHandler.isOwner(w, x, z, player)) {
-                player.sendMessage(Messages.NOT_OWNER.getMessage());
+                StringUtils.msg(player, chunksCore.getMessages().unclaimNotOwner);
                 return false;
             }
 
@@ -122,7 +125,7 @@ public final class MainHandler {
                 double reward = PluginSettings.getChunkPrice();
                 if (reward > 0) {
                     economy.addMoney(player.getUniqueId(), reward);
-                    player.sendMessage(Messages.UNCLAIMED_CHUNK.getMessage()
+                    StringUtils.msg(player, chunksCore.getMessages().unclaimSuccess
                             .replace("%price%", String.valueOf(reward)));
                 }
             }
@@ -153,7 +156,7 @@ public final class MainHandler {
         } else {
             UUID otherId = chunksCore.getPlayerHandler().getUUID(player);
             if (otherId == null) {
-                ply.sendMessage(Messages.COULD_NOT_FIND_PLAYER.getMessage());
+                StringUtils.msg(ply, chunksCore.getMessages().noPlayer);
                 return;
             }
 
@@ -167,25 +170,25 @@ public final class MainHandler {
 
     private void toggleAccess(Player owner, UUID other, String otherName, boolean multiple) {
         if (owner.getUniqueId().equals(other)) {
-            owner.sendMessage(Messages.CANNOT_TRUST_YOURSELF.getMessage());
+            owner.sendMessage(chunksCore.getMessages().accessOneself);
             return;
         }
 
         boolean hasAccess = chunksCore.getPlayerHandler().toggleAccess(owner.getUniqueId(), other);
         if (hasAccess) {
-            owner.sendMessage(
+            StringUtils.msg(owner,
                     (multiple
-                            ? Messages.TRUSTED_MULTIPLE.getMessage()
-                            : Messages.ADDED_TRUSTED.getMessage()
-                            .replace("%target%", otherName)));
+                            ? chunksCore.getMessages().accessToggleMultiple
+                            : chunksCore.getMessages().accessHas)
+                            .replace("%player%", otherName));
             return;
         }
 
-        owner.sendMessage(
+        StringUtils.msg(owner,
                 (multiple
-                        ? Messages.TRUSTED_MULTIPLE.getMessage()
-                        : Messages.REMOVED_TRUSTED.getMessage()
-                        .replace("%target%", otherName)));
+                        ? chunksCore.getMessages().accessToggleMultiple
+                        : chunksCore.getMessages().accessNoLongerHas)
+                        .replace("%player%", otherName));
     }
 
     public void listAccesssors(Player executor) {

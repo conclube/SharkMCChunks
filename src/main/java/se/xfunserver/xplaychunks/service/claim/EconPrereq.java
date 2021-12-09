@@ -1,7 +1,6 @@
 package se.xfunserver.xplaychunks.service.claim;
 
 import org.jetbrains.annotations.NotNull;
-import se.xfunserver.xplaychunks.utils.Messages;
 import se.xfunserver.xplaychunks.utils.PluginSettings;
 
 import java.util.Optional;
@@ -27,7 +26,7 @@ public class EconPrereq implements IClaimPrereq {
 
     @Override
     public Optional<String> getErrorMessage(@NotNull PrereqClaimData data) {
-        return Optional.of(Messages.CANNOT_AFFORD.getMessage());
+        return Optional.of(data.chunksCore.getMessages().claimNotEnoughMoney);
     }
 
     @Override
@@ -42,17 +41,17 @@ public class EconPrereq implements IClaimPrereq {
             if (data.freeClaims <= 1) {
                 // Only one free chunk (or error?)
                 // We shouldn't get this far if players can't claim free chunks.
-                return Optional.of(Messages.CLAIMED_FREE_CHUNK.getMessage());
+                return Optional.of(data.chunksCore.getMessages().claimFreeOne);
             }
 
-            return Optional.of(Messages.CLAIMED_FREE_CHUNK.getMessage());
+            return Optional.of(data.chunksCore.getMessages().claimFreeOne);
         } else {
             double cost = data.chunksCore.getConfig().getDouble("claim-price");
 
             return Optional.of(
-                    Messages.CLAIMED_CHUNK.getMessage()
+                    data.chunksCore.getMessages().claimSuccess
                             .replace("%chunkid%", String.format("%s, %s", data.chunk.getX(), data.chunk.getZ()))
-                            .replace("%price%", String.valueOf(PluginSettings.getChunkPrice()))
+                            .replace("%price%", String.valueOf(cost))
             );
         }
     }

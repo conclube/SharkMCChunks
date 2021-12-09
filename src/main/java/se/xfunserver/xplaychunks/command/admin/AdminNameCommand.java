@@ -3,10 +3,12 @@ package se.xfunserver.xplaychunks.command.admin;
 import org.bukkit.entity.Player;
 import se.xfunserver.xplaychunks.command.Command;
 import se.xfunserver.xplaychunks.player.PlayerHandler;
-import se.xfunserver.xplaychunks.utils.Messages;
+import se.xfunserver.xplaychunks.utils.StringUtils;
 import se.xfunserver.xplaychunks.xPlayChunks;
 
 public class AdminNameCommand {
+
+    private static xPlayChunks chunksCore = xPlayChunks.getInstance();
 
     @Command(commandNames = "setname",
             permission = "xplaychunks.setname",
@@ -17,13 +19,13 @@ public class AdminNameCommand {
             if (args.length == 0) {
                 if (playerHandler.hasChunkName(player.getUniqueId())) {
                     playerHandler.clearChunkName(player.getUniqueId());
-                    player.sendMessage(Messages.CLEARED_PLOT_NAME.getMessage());
+                    StringUtils.msg(player, chunksCore.getMessages().nameClear);
                 } else {
-                    player.sendMessage(Messages.NO_NAME_SET.getMessage());
+                    StringUtils.msg(player, chunksCore.getMessages().nameNotSet);
                 }
             } else {
                 playerHandler.setChunkName(player.getUniqueId(), args[0].trim());
-                player.sendMessage(Messages.NAME_SET.getMessage()
+                StringUtils.msg(player, chunksCore.getMessages().nameSet
                         .replace("%name%", args[0].trim()));
             }
         } catch (Exception e) {

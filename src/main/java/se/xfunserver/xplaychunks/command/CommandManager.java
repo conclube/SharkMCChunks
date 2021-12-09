@@ -16,8 +16,7 @@ import se.xfunserver.xplaychunks.command.player.ClaimCommand;
 import se.xfunserver.xplaychunks.command.player.ShowClaimedCommand;
 import se.xfunserver.xplaychunks.command.player.TrustCommand;
 import se.xfunserver.xplaychunks.command.player.UnclaimCommand;
-import se.xfunserver.xplaychunks.player.AdminOverride;
-import se.xfunserver.xplaychunks.utils.Messages;
+import se.xfunserver.xplaychunks.xPlayChunks;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -25,9 +24,11 @@ import java.util.*;
 
 public class CommandManager implements TabCompleter {
 
+    private xPlayChunks chunksCore;
     private final Map<String, Method> commands = new HashMap<>();
 
-    public CommandManager() {
+    public CommandManager(xPlayChunks chunksCore) {
+        this.chunksCore = chunksCore;
         List<Class<?>> commandClasses = Arrays.asList(
                 ClaimCommand.class,
                 ShowClaimedCommand.class,
@@ -73,7 +74,7 @@ public class CommandManager implements TabCompleter {
                 Command commandAnnotation = commandMethod.getAnnotation(Command.class);
 
                 if (!sender.hasPermission(commandAnnotation.permission())) {
-                    sender.sendMessage(Messages.NO_PERMISSSION.getMessage());
+                    sender.sendMessage(chunksCore.getMessages().commandNoPermission);
                     return true;
                 }
 

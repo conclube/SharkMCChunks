@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import se.xfunserver.xplaychunks.chunks.ChunkHandler;
 import se.xfunserver.xplaychunks.chunks.ChunkPos;
-import se.xfunserver.xplaychunks.utils.Messages;
+import se.xfunserver.xplaychunks.utils.StringUtils;
 import se.xfunserver.xplaychunks.xPlayChunks;
 
 import java.util.*;
@@ -205,9 +205,9 @@ public class WorldProfileEventHandler implements Listener {
 
         if (!isOwnerOrAccess) {
             // Send cancellation message.
-            player.sendMessage(chunksCore.getChunkHandler().isClaimed(entity.getLocation().getChunk())
-                    ? Messages.CLAIMED_DENY.getMessage()
-                    : Messages.WILDERNESS_DENY.getMessage());
+            StringUtils.msg(player, chunksCore.getChunkHandler().isClaimed(entity.getLocation().getChunk())
+                    ? chunksCore.getMessages().denyClaimed
+                    : chunksCore.getMessages().denyWilderness);
 
             // cancel event
             cancel.run();
@@ -393,9 +393,9 @@ public class WorldProfileEventHandler implements Listener {
                         cancel.run();
 
                         // Send cancellation message.
-                        player.sendMessage(chunksCore.getChunkHandler().isClaimed(neighbor.getChunk())
-                                ? Messages.CLAIMED_DENY.getMessage()
-                                : Messages.WILDERNESS_DENY.getMessage());
+                        StringUtils.msg(player, chunksCore.getChunkHandler().isClaimed(neighbor.getChunk())
+                                ? chunksCore.getMessages().denyClaimed
+                                : chunksCore.getMessages().denyWilderness);
 
                         // Just break here
                         return;

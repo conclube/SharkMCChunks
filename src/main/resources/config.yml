@@ -1,0 +1,31 @@
+mysql:
+  username: ""
+  password: ""
+  port: 3306
+  database: ""
+
+titles:
+  useActionBar: true
+  titleFadeInTime: 20
+  titleStayTime: 140
+  titleFadeOutTime: 20
+
+economy:
+  useEconomy: true
+  claimPrice: 5000.0
+  unclaimReward: 5000.0
+  firstFreeChunks: 1
+
+chunks:
+  maxChunksClaimed: 50
+  particlesWhenClaiming: true
+  displayNameOfOwner: true
+  maxPerListPage: 5
+  disabledWorlds: []
+
+chunkOutline:
+  name: 'SMOKE_LARGE'
+  durationSeconds: 5
+  spawnsPerSecond: 2
+  particlesPerSpawn: 2
+  heightRadius: 3

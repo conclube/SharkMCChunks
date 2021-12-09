@@ -1,0 +1,30 @@
+name: xPlayChunks
+version: '${project.version}'
+description: Ett MySQL hanterande, konfigurerbart, chunk-claiming plugin till xPlay.
+author: Wolfeiii
+website: xfunserver.se
+api-version: 1.17
+
+main: se.xfunserver.xplaychunks.xPlayChunks
+database: false
+depend: [
+    Vault, WorldGuard
+]
+
+commands:
+  chunk:
+    aliases: [xplaychunks]
+    description: xPlayChunks kommandon
+    usage: |
+      /chunk - Ett hjälp meddelande för alla chunk kommandon.
+      /chunk trust - Tillåt en annan spelare att modifiera din mark.
+      /chunk claim - Claimar den chunk som du står i.
+      /chunk list - Visar en lista med alla chunk som du äger.
+      /chunk visaclaimed - Omringar dom chunksen du äger med partiklar.
+      /chunk visa - Omringar den nuvarande chunken med partiklar.
+      /chunk unclaimall - Unclaimar alla chunk som du äger.
+      /chunk unclaim - Unclaimar den mark som du står i.
+      /chunk admin - Sätter på / stänger av Admin Override.
+      /chunk adminunclaim - Unclaimar den chunken som du står i.
+      /chunk setname - Sätter namnet på den nuvarande chunken.
+    permission: xplaychunks.chunk
